@@ -1,4 +1,7 @@
 library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(caret)
 
 field <- c(
   'age',
@@ -46,3 +49,24 @@ for(i in 1:14) {
 
 # remove NA
 data <- data[complete.cases(data), ]
+
+predictData <- data %>%
+  select(
+    -location
+  )
+
+set.seed(420)
+
+# sample indexes for training and testing
+testIndex <- sample(
+  nrow(predictData),
+  .3 * nrow(predictData)
+)
+
+trainingData <- predictData[-testIndex, ]
+testingData <- predictData[testIndex, ]
+
+tree <- rpart(target ~ ., data = trainingData)
+rpart.plot(tree)
+
+res_p <- predict(tree, testingData)
