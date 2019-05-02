@@ -1,0 +1,13 @@
+ [1] Albury           BadgerysCreek    Cobar            CoffsHarbour
+ [5] Moree            Newcastle        NorahHead        NorfolkIsland
+ [9] Penrith          Richmond         Sydney           SydneyAirport
+[13] WaggaWagga       Williamtown      Wollongong       Canberra
+[17] Tuggeranong      MountGinini      Ballarat         Bendigo
+[21] Sale             MelbourneAirport Melbourne        Mildura
+[25] Nhil             Portland         Watsonia         Dartmoor
+[29] Brisbane         Cairns           GoldCoast        Townsville
+[33] Adelaide         MountGambier     Nuriootpa        Woomera
+[37] Albany           Witchcliffe      PearceRAAF       PerthAirport
+[41] Perth            SalmonGums       Walpole          Hobart
+[45] Launceston       AliceSprings     Darwin           Katherine
+[49] Uluru

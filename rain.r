@@ -33,9 +33,37 @@ data$Evaporation[which(is.na(data$Evaporation))] <- mean(data$Evaporation, na.rm
 data$RainToday[which(is.na(data$RainToday))] <- mean(data$RainToday, na.rm = TRUE)
 data$RainTomorrow[which(is.na(data$RainTomorrow))] <- mean(data$RainTomorrow, na.rm = TRUE)
 
+# Preprocessing Data
 predata <- data %>%
-  separate(col = Date, into = c("year", "month", "day"), sep = "-") %>% 
+  separate(col = Date, into = c("Year", "Month", "Day"), sep = "-") %>% 
   select( -Rainfall, -RainToday, -RISK_MM)
+
+# Sydney <- data %>% filter(
+#   Location == 'Sydney' &
+#   grepl("\\d{4}-0[2-6]-\\d{2}", Date)
+# )
+# Brisbane <- data %>% filter(
+#   Location == 'Brisbane' &
+#   grepl("\\d{4}-(0[1-3]|12)-\\d{2}", Date)
+# )
+# Perth <- data %>% filter(
+#   Location == 'Perth' &
+#   grepl("\\d{4}-(0[5-8])-\\d{2}", Date)
+# )
+# Darwin <- data %>% filter(
+#   Location == 'Darwin' &
+#   grepl("\\d{4}-(0[1-4]|1[1-2])-\\d{2}", Date)
+# )
+
+# data <- rbind(Sydney, Brisbane, Perth, Darwin)
+
+data <- predata %>% filter(Location == 'Adelaide')
+
+tomorrow <- data %>% 
+  select( -Rainfall, -Date, -RainToday, -RISK_MM)
+
+# data2 <- data %>% 
+#   select( -Rainfall, -Location, -Date, -RainTomorrow, -RISK_MM)
 
 set.seed(555)
 
