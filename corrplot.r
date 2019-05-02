@@ -6,6 +6,10 @@ library(caret)
 library(corrplot)
 
 preData <- read.csv('csv/weatherAUS.csv')
+
+#remove NA
+preData <- preData %>% filter(!is.na(RainTomorrow))
+
 location <- unique(as.numeric(preData$Location))
 preData$RainToday<-str_replace_all(preData$RainToday,"No","0")
 preData$RainToday<-str_replace_all(preData$RainToday,"Yes","1")
@@ -38,8 +42,15 @@ preData <- preData %>% select(-WindDir3pm, -WindDir9am, -WindGustDir)
 preData <- preData %>% separate(col = Date, into = c("Year", "Month", "Day"), sep = "-")
 preData <- preData %>% mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day))
 
+png('images/corrplot.png', 800, 600)
+preData %>%
+  select(-Location) %>%
+  cor() %>%
+  corrplot()
+dev.off()
+
 for(location in unique(preData$Location)) {
-  png(paste('images/', location, '.png'), 800, 600)
+  png(paste('images/', location, '.png', sep = ''), 800, 600)
   preData %>%
     filter(Location == location) %>%
     select(-Location) %>%
