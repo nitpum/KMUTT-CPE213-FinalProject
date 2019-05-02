@@ -33,7 +33,6 @@ preData$Evaporation[which(is.na(preData$Evaporation))] <- mean(preData$Evaporati
 preData$RISK_MM[which(is.na(preData$RISK_MM))] <- mean(preData$RISK_MM, na.rm = TRUE)
 preData$RainToday[which(is.na(preData$RainToday))] <- mean(preData$RainToday, na.rm = TRUE)
 preData$RainTomorrow[which(is.na(preData$RainTomorrow))] <- mean(preData$RainTomorrow, na.rm = TRUE)
-preData$Location <- as.numeric(preData$Location)
 
 preData <- preData %>% select(-WindDir3pm, -WindDir9am, -WindGustDir)
 preData <- preData %>% separate(col = Date, into = c("Year", "Month", "Day"), sep = "-")
@@ -43,7 +42,7 @@ for(location in unique(preData$Location)) {
   png(paste('images/', location, '.png'), 800, 600)
   preData %>%
     filter(Location == location) %>%
-    #select(-Location) %>%
+    select(-Location) %>%
     cor() %>%
     corrplot()
   dev.off()
