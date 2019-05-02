@@ -6,6 +6,10 @@ library(caret)
 library(corrplot)
 
 preData <- read.csv('csv/weatherAUS.csv')
+
+#remove NA
+preData <- preData %>% filter(!is.na(RainTomorrow), !is.na(RainToday))
+
 location <- unique(as.numeric(preData$Location))
 preData$RainToday<-str_replace_all(preData$RainToday,"No","0")
 preData$RainToday<-str_replace_all(preData$RainToday,"Yes","1")
@@ -31,15 +35,20 @@ preData$Temp3pm[which(is.na(preData$Temp3pm))] <- mean(preData$Temp3pm,na.rm = T
 preData$Sunshine[which(is.na(preData$Sunshine))] <- mean(preData$Sunshine, na.rm = TRUE)
 preData$Evaporation[which(is.na(preData$Evaporation))] <- mean(preData$Evaporation, na.rm = TRUE)
 preData$RISK_MM[which(is.na(preData$RISK_MM))] <- mean(preData$RISK_MM, na.rm = TRUE)
-preData$RainToday[which(is.na(preData$RainToday))] <- mean(preData$RainToday, na.rm = TRUE)
-preData$RainTomorrow[which(is.na(preData$RainTomorrow))] <- mean(preData$RainTomorrow, na.rm = TRUE)
 
 preData <- preData %>% select(-WindDir3pm, -WindDir9am, -WindGustDir)
 preData <- preData %>% separate(col = Date, into = c("Year", "Month", "Day"), sep = "-")
 preData <- preData %>% mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day))
 
+png('images/corrplot.png', 800, 600)
+preData %>%
+  select(-Location) %>%
+  cor() %>%
+  corrplot()
+dev.off()
+
 for(location in unique(preData$Location)) {
-  png(paste('images/', location, '.png'), 800, 600)
+  png(paste('images/', location, '.png', sep = ''), 800, 600)
   preData %>%
     filter(Location == location) %>%
     select(-Location) %>%
