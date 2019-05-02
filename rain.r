@@ -25,6 +25,7 @@ data$Temp9am[which(is.na(data$Temp9am))] <- mean(data$Temp9am,na.rm = TRUE)
 data$Temp3pm[which(is.na(data$Temp3pm))] <- mean(data$Temp3pm,na.rm = TRUE)
 data$Sunshine[which(is.na(data$Sunshine))] <- mean(data$Sunshine, na.rm = TRUE)
 data$Evaporation[which(is.na(data$Evaporation))] <- mean(data$Evaporation, na.rm = TRUE)
+data$RainTomorrow[which(is.na(data$RainTomorrow))] <- mean(data$RainTomorrow, na.rm = TRUE)
 
 tomorrow <- data %>% 
   select( -Rainfall, -Location, -Date, -RainToday, -RISK_MM)
@@ -62,5 +63,4 @@ confusionMatrix(res_class,
                 testing_data$RainTomorrow,
                 positive = "Yes",
                 mode = "prec_recall"
-                # prevalence = 15
                 )
