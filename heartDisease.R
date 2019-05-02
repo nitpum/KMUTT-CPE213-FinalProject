@@ -50,6 +50,10 @@ for(i in 1:14) {
 # remove NA
 data <- data[complete.cases(data), ]
 
+# change target to positive/negative
+data <- data %>%
+  mutate(target = ifelse(data$target == 1, 'positive', 'negative'))
+
 predictData <- data %>%
   select(
     -location
