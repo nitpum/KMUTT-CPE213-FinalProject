@@ -14,7 +14,7 @@ preData <- read.csv('csv/weatherAUS.csv')
 #
 preData %>%
   # Cleaning
-  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location) %>% 
+  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
 # Prepocessing
@@ -45,7 +45,6 @@ preData$Temp9am[which(is.na(preData$Temp9am))] <- mean(preData$Temp9am,na.rm = T
 preData$Temp3pm[which(is.na(preData$Temp3pm))] <- mean(preData$Temp3pm,na.rm = TRUE)
 preData$Sunshine[which(is.na(preData$Sunshine))] <- mean(preData$Sunshine, na.rm = TRUE)
 preData$Evaporation[which(is.na(preData$Evaporation))] <- mean(preData$Evaporation, na.rm = TRUE)
-preData$RISK_MM[which(is.na(preData$RISK_MM))] <- mean(preData$RISK_MM, na.rm = TRUE)
 
 preData -> data
 
