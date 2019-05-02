@@ -6,6 +6,7 @@ library(caret)
 library(corrplot)
 
 preData <- read.csv('csv/weatherAUS.csv')
+location <- unique(as.numeric(preData$Location))
 preData$RainToday<-str_replace_all(preData$RainToday,"No","0")
 preData$RainToday<-str_replace_all(preData$RainToday,"Yes","1")
 preData$RainTomorrow<-str_replace_all(preData$RainTomorrow,"No","0")
