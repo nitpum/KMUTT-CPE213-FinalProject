@@ -39,8 +39,8 @@ set.seed(555)
 # Model
 model <- data
 
-model <- lm(RainTomorrow ~ Location, 
-            model)
+#model <- lm(RainTomorrow ~ Location, 
+#            model)
 
 # Predict Tomorrow
 
@@ -60,6 +60,7 @@ res_class <- predict(tree,
 
 confusionMatrix(res_class,
                 testing_data$RainTomorrow,
-                positive = "No",
+                positive = "Yes",
                 mode = "prec_recall"
+                # prevalence = 15
                 )
