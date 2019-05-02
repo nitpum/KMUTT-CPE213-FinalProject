@@ -50,7 +50,7 @@ sum(euei, na.rm = TRUE)
 euei <- tomorrow$RainTomorrow == "No"
 sum(euei, na.rm = TRUE)
 
-tomorrow %>% filter(!is.na(RainTomorrow)) -> tomorrow
+# tomorrow %>% filter(!is.na(RainTomorrow)) -> tomorrow
 
 tomorrow %>% filter(RainTomorrow == "No") -> tomorrowNo
 # tomorrowNo[1:30000, ] -> tomorrowNo
@@ -63,10 +63,14 @@ tomorrowNo_traning <- sample(nrow(tomorrowNo), .2*nrow(tomorrowNo))
 
 model <- glm(RainTomorrow ~ ., data = tomorrow, family = "binomial")
 logit_res <-predict(model, tomorrow, tpye="response")
+# view(logit_res)
+hist(logit_res, breaks=100)
 
-# res <- factor(ifelse(logit_res > 0.15,"Yes","No"), level = c("No","Yes"))
+res <- factor(ifelse(logit_res > 0.5,
+                     "Yes","No"), 
+              level = c("No","Yes"))
 
 confusionMatrix(res, 
                 tomorrow$RainTomorrow, 
-                positive="Yes",
+                positive="No",
                 mode="prec_recall")
