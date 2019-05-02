@@ -51,9 +51,15 @@ dev.off()
 # Rain month
 png('images/visualization/month_bar.png', 800, 600)
   data %>% 
+    filter(RainToday == "Yes") %>% 
     ggplot(aes(x = reorder(MonthName, Month))) + 
     geom_bar() + 
     xlab("Month")
 dev.off()
 
-# 
+# Humidity3pm ~ RainTomorrow
+  data %>% 
+    #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
+    #geom_violin()
+    ggplot(aes(x = Humidity3pm)) +
+    geom_bar()
