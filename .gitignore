@@ -2,3 +2,6 @@
 .Rhistory
 *.log
 output
+
+!csv/
+*.csv
