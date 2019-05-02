@@ -57,7 +57,7 @@ predata <- data %>%
 
 # data <- rbind(Sydney, Brisbane, Perth, Darwin)
 
-data <- predata %>% filter(Location == 'Adelaide')
+# data <- predata %>% filter(Location == 'Adelaide')
 
 tomorrow <- data %>% 
   select( -Rainfall, -Date, -RainToday, -RISK_MM)
@@ -67,62 +67,3 @@ tomorrow <- data %>%
 
 set.seed(555)
 
-#
-#
-# Data Visualization
-#
-#
-
-
-data %>% 
-  ggplot(aes(x=RainTomorrow, y=Humidity3pm, colour = RainTomorrow, fill= RainTomorrow)) + geom_violin()
-
-data %>% 
-  ggplot(aes(x=RainTomorrow, y=Pressure3pm, colour = RainTomorrow, fill= RainTomorrow)) + 
-  geom_violin()
-
-# num_data <- data %>% 
-#   select(contains("Temp"), Rainfall, contains("Spedd"), 
-#          contains("Humidity"), contains("Pressure"), RISK_MM)
-# pairs(num_data)
-
-
-
-#
-#
-# Modeling Implement
-#
-#
-
-
-# Training data
-
-# Model
-model <- data
-
-#model <- lm(RainTomorrow ~ Location, 
-#            model)
-
-
-# Predict Tomorrow
-# tomorrow <- predata %>% 
-#     select(-day, -year)
-# test_index <- sample(nrow(tomorrow), .2*nrow(tomorrow))
-# training_data <- tomorrow[-test_index, ]
-# testing_data <- tomorrow[test_index, ]
-
-# tree <- rpart(RainTomorrow ~ .,
-#              data = training_data)
-
-# rpart.plot(tree)
-
-# res_p <- predict(tree, training_data)
-# res_class <- predict(tree,
-#                    testing_data, 
-#                    type = "class")
-
-# confusionMatrix(res_class,
-#                testing_data$RainTomorrow,
-#                positive = "Yes",
-#                mode = "prec_recall"
-#                )
