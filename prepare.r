@@ -1,9 +1,4 @@
 library(tidyverse)
-library(ggplot2)
-library(rpart)
-library(rpart.plot)
-library(caret)
-library(corrplot)
 
 preData <- read.csv('csv/weatherAUS.csv')
 
@@ -52,20 +47,3 @@ preData -> data
 #
 # End Data Preparatiob
 #
-
-png('images/corrplot.png', 800, 600)
-  data %>%
-    select(-MonthName) %>% 
-    cor() %>%
-    corrplot()
-dev.off()
-
-#for(location in unique(preData$Location)) {
-#  png(paste('images/', location, '.png', sep = ''), 800, 600)
-#  preData %>%
-#    filter(Location == location) %>%
-#    select(-Location) %>%
-#    cor() %>%
-#    corrplot()
-#  dev.off()
-#}
