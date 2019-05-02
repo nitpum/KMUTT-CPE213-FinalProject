@@ -4,44 +4,52 @@ library(rpart.plot)
 library(caret)
 library(glm2)
 
-data <- read.csv('csv/weatherAUS.csv')
+preData <- read.csv('csv/weatherAUS.csv')
 
-#data <- data %>%
-#  mutate(IsRain = ifelse(is.na(Rainfall), FALSE, (Rainfall > 0) ))
-data$MinTemp<-as.numeric(data$MinTemp)
+#
+#
+# Data Preparation
+#
+#
+preData %>%
+  # Cleaning
+  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location, -RISK_MM) %>% 
+  filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
-#Replacing NA and missing values with mean for numeric data
+# Prepocessing
+preData %>%
+  separate(col = Date, into = c("Year", "Month", "Day"), sep = "-") %>%
+  mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day)) %>%
+  mutate(MonthName = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[Month]) -> preData
 
-data$MinTemp[which(is.na(data$MinTemp))] <- mean(data$MinTemp,na.rm = TRUE)
-data$MaxTemp[which(is.na(data$MaxTemp))] <- mean(data$MaxTemp,na.rm = TRUE)
-data$Rainfall[which(is.na(data$Rainfall))] <- mean(data$Rainfall,na.rm = TRUE)
-data$WindGustSpeed[which(is.na(data$WindGustSpeed))] <- mean(data$WindGustSpeed,na.rm = TRUE)
-data$WindSpeed9am[which(is.na(data$WindSpeed9am))] <- mean(data$WindSpeed9am,na.rm = TRUE)
-data$WindSpeed3pm[which(is.na(data$WindSpeed3pm))] <- mean(data$WindSpeed3pm,na.rm = TRUE)
-data$Humidity3pm[which(is.na(data$Humidity3pm))] <- mean(data$Humidity3pm,na.rm = TRUE)
-data$Humidity9am[which(is.na(data$Humidity9am))] <- mean(data$Humidity9am,na.rm = TRUE)
-data$Pressure9am[which(is.na(data$Pressure9am))] <- mean(data$Pressure9am,na.rm = TRUE)
-data$Pressure3pm[which(is.na(data$Pressure3pm))] <- mean(data$Pressure3pm,na.rm = TRUE)
-data$Temp9am[which(is.na(data$Temp9am))] <- mean(data$Temp9am,na.rm = TRUE)
-data$Temp3pm[which(is.na(data$Temp3pm))] <- mean(data$Temp3pm,na.rm = TRUE)
-data$Sunshine[which(is.na(data$Sunshine))] <- mean(data$Sunshine, na.rm = TRUE)
-data$Evaporation[which(is.na(data$Evaporation))] <- mean(data$Evaporation, na.rm = TRUE)
+preData$MinTemp <- as.numeric(preData$MinTemp)
+preData$MinTemp[which(is.na(preData$MinTemp))] <- mean(preData$MinTemp,na.rm = TRUE)
+preData$MaxTemp[which(is.na(preData$MaxTemp))] <- mean(preData$MaxTemp,na.rm = TRUE)
+preData$WindGustSpeed[which(is.na(preData$WindGustSpeed))] <- mean(preData$WindGustSpeed,na.rm = TRUE)
+preData$WindSpeed9am[which(is.na(preData$WindSpeed9am))] <- mean(preData$WindSpeed9am,na.rm = TRUE)
+preData$WindSpeed3pm[which(is.na(preData$WindSpeed3pm))] <- mean(preData$WindSpeed3pm,na.rm = TRUE)
+preData$Cloud3pm[which(is.na(preData$Cloud3pm))] <- mean(preData$Cloud3pm,na.rm = TRUE)
+preData$Cloud9am[which(is.na(preData$Cloud9am))] <- mean(preData$Cloud9am,na.rm = TRUE)
+preData$Humidity3pm[which(is.na(preData$Humidity3pm))] <- mean(preData$Humidity3pm,na.rm = TRUE)
+preData$Humidity9am[which(is.na(preData$Humidity9am))] <- mean(preData$Humidity9am,na.rm = TRUE)
+preData$Pressure9am[which(is.na(preData$Pressure9am))] <- mean(preData$Pressure9am,na.rm = TRUE)
+preData$Pressure3pm[which(is.na(preData$Pressure3pm))] <- mean(preData$Pressure3pm,na.rm = TRUE)
+preData$Temp9am[which(is.na(preData$Temp9am))] <- mean(preData$Temp9am,na.rm = TRUE)
+preData$Temp3pm[which(is.na(preData$Temp3pm))] <- mean(preData$Temp3pm,na.rm = TRUE)
+preData$Sunshine[which(is.na(preData$Sunshine))] <- mean(preData$Sunshine, na.rm = TRUE)
+preData$Evaporation[which(is.na(preData$Evaporation))] <- mean(preData$Evaporation, na.rm = TRUE)
 
-tomorrow <- data %>% 
-  select( -Rainfall, -Location, -Date, -RainToday, -RISK_MM)
+preData -> data
 
-data2 <- data %>% 
-  select( -Rainfall, -Location, -Date, -RainTomorrow, -RISK_MM)
+#
+# End Data Preparatiob
+#
+
+tomorrow <- data
 
 set.seed(555)
 
 # Training data
-
-# Model
-model <- data
-
-#model <- lm(RainTomorrow ~ Location, 
-#            model)
 
 # Predict Tomorrow
 
