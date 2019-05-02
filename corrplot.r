@@ -52,7 +52,7 @@ preData -> data
 # End Data Preparatiob
 #
 
-png('images/corrplot.png', 800, 600)
+png('images/visualization/corrplot.png', 800, 600)
   data %>%
     select(-MonthName) %>% 
     cor() %>%
