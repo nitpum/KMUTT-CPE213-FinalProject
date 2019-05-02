@@ -1,21 +1,17 @@
 library(tidyverse)
-library(ggplot2)
 library(rpart)
 library(rpart.plot)
 library(caret)
+library(glm2)
 
 data <- read.csv('csv/weatherAUS.csv')
 
+#data <- data %>%
+#  mutate(IsRain = ifelse(is.na(Rainfall), FALSE, (Rainfall > 0) ))
+data$MinTemp<-as.numeric(data$MinTemp)
 
-#
-#
-# Data preparation
-#
-#
 #Replacing NA and missing values with mean for numeric data
-data$MinTemp <- as.numeric(data$MinTemp)
-data$RainToday<-as.numeric(data$RainToday)
-data$RainTomorrow<-as.numeric(data$RainTomorrow)
+
 data$MinTemp[which(is.na(data$MinTemp))] <- mean(data$MinTemp,na.rm = TRUE)
 data$MaxTemp[which(is.na(data$MaxTemp))] <- mean(data$MaxTemp,na.rm = TRUE)
 data$Rainfall[which(is.na(data$Rainfall))] <- mean(data$Rainfall,na.rm = TRUE)
@@ -30,40 +26,47 @@ data$Temp9am[which(is.na(data$Temp9am))] <- mean(data$Temp9am,na.rm = TRUE)
 data$Temp3pm[which(is.na(data$Temp3pm))] <- mean(data$Temp3pm,na.rm = TRUE)
 data$Sunshine[which(is.na(data$Sunshine))] <- mean(data$Sunshine, na.rm = TRUE)
 data$Evaporation[which(is.na(data$Evaporation))] <- mean(data$Evaporation, na.rm = TRUE)
-data$RainToday[which(is.na(data$RainToday))] <- mean(data$RainToday, na.rm = TRUE)
-data$RainTomorrow[which(is.na(data$RainTomorrow))] <- mean(data$RainTomorrow, na.rm = TRUE)
-
-# Preprocessing Data
-predata <- data %>%
-  separate(col = Date, into = c("Year", "Month", "Day"), sep = "-") %>% 
-  select( -Rainfall, -RainToday, -RISK_MM)
-
-# Sydney <- data %>% filter(
-#   Location == 'Sydney' &
-#   grepl("\\d{4}-0[2-6]-\\d{2}", Date)
-# )
-# Brisbane <- data %>% filter(
-#   Location == 'Brisbane' &
-#   grepl("\\d{4}-(0[1-3]|12)-\\d{2}", Date)
-# )
-# Perth <- data %>% filter(
-#   Location == 'Perth' &
-#   grepl("\\d{4}-(0[5-8])-\\d{2}", Date)
-# )
-# Darwin <- data %>% filter(
-#   Location == 'Darwin' &
-#   grepl("\\d{4}-(0[1-4]|1[1-2])-\\d{2}", Date)
-# )
-
-# data <- rbind(Sydney, Brisbane, Perth, Darwin)
-
-# data <- predata %>% filter(Location == 'Adelaide')
 
 tomorrow <- data %>% 
-  select( -Rainfall, -Date, -RainToday, -RISK_MM)
+  select( -Rainfall, -Location, -Date, -RainToday, -RISK_MM)
 
-# data2 <- data %>% 
-#   select( -Rainfall, -Location, -Date, -RainTomorrow, -RISK_MM)
+data2 <- data %>% 
+  select( -Rainfall, -Location, -Date, -RainTomorrow, -RISK_MM)
 
 set.seed(555)
 
+# Training data
+
+# Model
+model <- data
+
+#model <- lm(RainTomorrow ~ Location, 
+#            model)
+
+# Predict Tomorrow
+
+euei <- tomorrow$RainTomorrow == "Yes"
+sum(euei, na.rm = TRUE)
+euei <- tomorrow$RainTomorrow == "No"
+sum(euei, na.rm = TRUE)
+
+tomorrow %>% filter(!is.na(RainTomorrow)) -> tomorrow
+
+tomorrow %>% filter(RainTomorrow == "No") -> tomorrowNo
+# tomorrowNo[1:30000, ] -> tomorrowNo
+
+tomorrow %>% filter(RainTomorrow == "Yes") -> tomorrowYes
+# tomorrowYes[1:30000, ] -> tomorrowYes
+
+tomorrowYes_traning <- sample(nrow(tomorrowYes), .2*nrow(tomorrowYes))
+tomorrowNo_traning <- sample(nrow(tomorrowNo), .2*nrow(tomorrowNo))
+
+model <- glm(RainTomorrow ~ ., data = tomorrow, family = "binomial")
+logit_res <-predict(model, tomorrow, tpye="response")
+
+# res <- factor(ifelse(logit_res > 0.15,"Yes","No"), level = c("No","Yes"))
+
+confusionMatrix(res, 
+                tomorrow$RainTomorrow, 
+                positive="Yes",
+                mode="prec_recall")
