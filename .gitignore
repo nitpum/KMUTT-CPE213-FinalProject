@@ -6,3 +6,4 @@ output
 
 !csv/
 *.csv
+.Rproj.user
