@@ -24,16 +24,18 @@ preData$MinTemp <- as.numeric(preData$MinTemp)
 preData$RainToday <- ifelse(preData$RainToday == 'Yes', 1, 0)
 preData$RainTomorrow <- ifelse(preData$RainTomorrow == 'Yes', 1, 0)
 
-# replace na with mean
-for(col in c('MinTemp', 'MaxTemp', 'WindGustSpeed', 'Sunshine', 'Evaporation')) {
-  preData[which(is.na(preData[, col])), col] <- mean(preData[, col], na.rm = TRUE)
+# list columns
+cols <- c('MinTemp', 'MaxTemp', 'WindGustSpeed', 'Sunshine', 'Evaporation')
+
+for(col in c('WindSpeed', 'Cloud', 'Humidity', 'Pressure', 'Temp')) {
+  for(time in c('9am', '3pm')) {
+    cols <- c(cols, paste(col, time, sep = ''))
+  }
 }
 
-for(colname in c('WindSpeed', 'Cloud', 'Humidity', 'Pressure', 'Temp')) {
-  for(time in c('9am', '3pm')) {
-    col <- paste(colname, time, sep = '')
-    preData[which(is.na(preData[, col])), col] <- mean(preData[, col], na.rm = TRUE)
-  }
+# replace na with mean
+for(col in cols) {
+  preData[which(is.na(preData[, col])), col] <- mean(preData[, col], na.rm = TRUE)
 }
 
 preData -> data
