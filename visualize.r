@@ -1,5 +1,4 @@
 library(tidyverse)
-library
 
 rawData <- read.csv('csv/weatherAUS.csv')
 
@@ -113,3 +112,20 @@ data %>%
   select(contains("Temp"), Rainfall, contains("Spedd"), 
          contains("Humidity"), contains("Pressure")) -> pairs_data
 pairs(pairs_data)
+# # temp
+# data %>%
+#   group_by(Month, Day) %>%
+#   summarise(
+#     Temp3pm = mean(Temp3pm)
+#   ) %>%
+#   ggplot() +
+#     geom_line(
+#       aes(x = as.Date(paste(Month, Day, sep = '-'), format = '%m-%d'), y = Temp3pm)
+#     )
+
+# dist
+# data %>%
+#   ggplot() +
+#     geom_bar(
+#       aes(x = Humidity3pm)
+#     )
