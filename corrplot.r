@@ -5,7 +5,7 @@ library(rpart.plot)
 library(caret)
 library(corrplot)
 
-preData <- read.csv('csv/weatherAUS.csv')
+rawData <- read.csv('csv/weatherAUS.csv')
 
 #
 #
@@ -13,7 +13,7 @@ preData <- read.csv('csv/weatherAUS.csv')
 #
 #
 # Cleaning
-preData %>%
+rawData %>%
   select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 

@@ -1,6 +1,6 @@
 library(tidyverse)
 
-preData <- read.csv('csv/weatherAUS.csv')
+rawData <- read.csv('csv/weatherAUS.csv')
 
 #
 #
@@ -8,7 +8,7 @@ preData <- read.csv('csv/weatherAUS.csv')
 #
 #
 # Cleaning
-preData %>%
+rawData %>%
   select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
@@ -21,8 +21,8 @@ preData %>%
 preData$MinTemp <- as.numeric(preData$MinTemp)
 
 # change yes/no to 1/0
-preData$RainToday <- ifelse(RainToday == 'Yes', 1, 0)
-preData$RainTomorrow <- ifelse(RainTomorrow == 'Yes', 1, 0)
+preData$RainToday <- ifelse(preData$RainToday == 'Yes', 1, 0)
+preData$RainTomorrow <- ifelse(preData$RainTomorrow == 'Yes', 1, 0)
 
 # replace na with mean
 for(col in c('MinTemp', 'MaxTemp', 'WindGustSpeed', 'Sunshine', 'Evaporation')) {
