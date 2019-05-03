@@ -21,10 +21,6 @@ preData %>%
 
 preData$MinTemp <- as.numeric(preData$MinTemp)
 
-# change yes/no to 1/0
-preData$RainToday <- ifelse(preData$RainToday == 'Yes', 1, 0)
-preData$RainTomorrow <- ifelse(preData$RainTomorrow == 'Yes', 1, 0)
-
 # replace na with mean
 for(col in c('MinTemp', 'MaxTemp', 'WindGustSpeed', 'Sunshine', 'Evaporation')) {
   preData[which(is.na(preData[, col])), col] <- mean(preData[, col], na.rm = TRUE)
@@ -49,12 +45,19 @@ png('images/visualization/ratio_no-yes-na.png', 800, 600)
    ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
 dev.off()
 
-Humidity3pm ~ RainTomorrow
- data %>% 
-   #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
-   #geom_violin()
-   ggplot(aes(x = Humidity3pm)) +
-     geom_bar()
+# Humidity9am ~ RainTomorrow
+png('images/visualization/raintomorrow_humidity9am.png', 800, 600)
+  data %>% 
+   ggplot(aes(x=RainTomorrow, y=Humidity9am, colour = RainTomorrow, fill= RainTomorrow)) + 
+   geom_violin()
+dev.off()
+
+# Humidity3pm ~ RainTomorrow
+png('images/visualization/raintomorrow_humidity3pm.png', 800, 600)
+  data %>% 
+   ggplot(aes(x=RainTomorrow, y=Humidity3pm, colour = RainTomorrow, fill= RainTomorrow)) + 
+   geom_violin()
+dev.off()
 
 number_of_record_by_location <- data %>%
   group_by(Location) %>%
