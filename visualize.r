@@ -99,14 +99,17 @@ data %>%
     )
 dev.off()
 
-# rain tomorrow by location scatter plot
-png('images/visualization/rain_by_location_scatter.png', 1920, 1080)
+# humidity3pm rainfall
+png('images/visualization/humidity3pm_rainfall.png', 1920, 1080)
 data %>%
-  mutate(
-    RainTomorrow = ifelse(RainTomorrow == 'Yes', 1, 0)
-  ) %>%
-  ggplot() +
-  geom_point(
-    aes(x = Month, y = RainTomorrow, fill = Location)
-  )
+  filter(Rainfall < 200) %>% 
+  ggplot(aes(x=Humidity3pm, y = Rainfall)) + 
+  geom_point(aes(colour = Rainfall)) + geom_smooth(method = "lm")
 dev.off()
+
+# Pair
+png('images/visualization/pairs.png', 1920, 1080)
+data %>% 
+  select(contains("Temp"), Rainfall, contains("Spedd"), 
+         contains("Humidity"), contains("Pressure")) -> pairs_data
+pairs(pairs_data)
