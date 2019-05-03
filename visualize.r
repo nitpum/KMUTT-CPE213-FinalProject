@@ -10,7 +10,7 @@ preData <- read.csv('csv/weatherAUS.csv')
 #
 preData %>%
   # Cleaning
-  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location, -RISK_MM) %>% 
+  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
 # Prepocessing
@@ -42,24 +42,64 @@ preData -> data
 # End Data Preparatiob
 #
 
-# Ratio No:Yes:NA in RainTomorrow
-png('images/visualization/ratio_no-yes-na.png', 800, 600)
-data %>% 
-  ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
+# # Ratio No:Yes:NA in RainTomorrow
+# png('images/visualization/ratio_no-yes-na.png', 800, 600)
+# data %>% 
+#   ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
+# dev.off()
+
+# # Rain month
+# png('images/visualization/month_bar.png', 800, 600)
+#   data %>% 
+#     filter(RainToday == "Yes") %>% 
+#     ggplot(aes(x = reorder(MonthName, Month))) + 
+#     geom_bar() + 
+#     xlab("Month")
+# dev.off()
+
+# # Humidity3pm ~ RainTomorrow
+#   data %>% 
+#     #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
+#     #geom_violin()
+#     ggplot(aes(x = Humidity3pm)) +
+#     geom_bar()
+
+number_of_record_by_location <- data %>%
+  group_by(Location) %>%
+  summarise(
+    count = n()
+  )
+
+# rain today
+png('images/visualization/rain_today_by_month.png', 800, 600)
+data %>%
+  mutate(
+    RainToday = ifelse(RainToday == 'Yes', 1, 0)
+  ) %>%
+  group_by(Month) %>%
+  summarise(
+    mean = mean(RainToday)
+  ) %>%
+  ggplot() +
+    geom_bar(
+      aes(x = Month, y = mean),
+      stat = 'summary', fun.y = 'mean'
+    )
 dev.off()
 
-# Rain month
-png('images/visualization/month_bar.png', 800, 600)
-  data %>% 
-    filter(RainToday == "Yes") %>% 
-    ggplot(aes(x = reorder(MonthName, Month))) + 
-    geom_bar() + 
-    xlab("Month")
+# rain today by location
+png('images/visualization/rain_by_location.png', 1920, 1080)
+data %>%
+  mutate(
+    RainToday = ifelse(RainToday == 'Yes', 1, 0)
+  ) %>%
+  group_by(Location, Month) %>%
+  summarise(
+    mean = mean(RainToday)
+  ) %>%
+  ggplot() +
+    geom_bar(
+      aes(x = Month, y = mean, fill = Location),
+      position = 'dodge', stat = 'summary', fun.y = 'mean'
+    )
 dev.off()
-
-# Humidity3pm ~ RainTomorrow
-  data %>% 
-    #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
-    #geom_violin()
-    ggplot(aes(x = Humidity3pm)) +
-    geom_bar()
