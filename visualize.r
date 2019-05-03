@@ -70,6 +70,23 @@ number_of_record_by_location <- data %>%
     count = n()
   )
 
+# rain today
+png('images/visualization/rain_today_by_month.png', 800, 600)
+data %>%
+  mutate(
+    RainToday = ifelse(RainToday == 'Yes', 1, 0)
+  ) %>%
+  group_by(Month) %>%
+  summarise(
+    mean = mean(RainToday)
+  ) %>%
+  ggplot() +
+    geom_bar(
+      aes(x = Month, y = mean),
+      stat = 'summary', fun.y = 'mean'
+    )
+dev.off()
+
 # rain today by location
 png('images/visualization/rain_by_location.png', 1920, 1080)
 data %>%

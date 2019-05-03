@@ -52,7 +52,7 @@ preData -> data
 # End Data Preparatiob
 #
 
-png('images/corrplot.png', 800, 600)
+png('images/corrplot/corrplot.png', 800, 600)
   data %>%
     select(-MonthName) %>% 
     cor() %>%
@@ -60,7 +60,7 @@ png('images/corrplot.png', 800, 600)
 dev.off()
 
 #for(location in unique(preData$Location)) {
-#  png(paste('images/', location, '.png', sep = ''), 800, 600)
+#  png(paste('images/corrplot/', location, '.png', sep = ''), 800, 600)
 #  preData %>%
 #    filter(Location == location) %>%
 #    select(-Location) %>%
