@@ -32,7 +32,7 @@ for(col in c('WindSpeed', 'Cloud', 'Humidity', 'Pressure', 'Temp')) {
   }
 }
 
-par(mfrow=c(4, 4))
+# par(mfrow=c(4, 4))
 i <- 1
 for(col in cols) {
   min(preData[, col], na.rm = TRUE)
@@ -42,7 +42,8 @@ for(col in cols) {
       geom_bar(
         aes_string(x = col),
         fill = color[i]
-      ) 
-      #ggsave(paste('images/dist/', col, '.png', sep = ''))
+      ) +
+      theme(text = element_text(size = 24)) +
+      ggsave(paste('images/dist/', col, '.png', sep = ''))
   i <- i+1
 }
