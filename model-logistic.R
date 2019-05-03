@@ -72,7 +72,13 @@ tomorrowNo_traning <- sample(nrow(tomorrowNo), .2*nrow(tomorrowNo))
 model <- glm(RainTomorrow ~ ., data = tomorrow, family = "binomial")
 logit_res <-predict(model, tomorrow, tpye="response")
 # view(logit_res)
-hist(logit_res, breaks=100)
+h <- hist(logit_res, breaks=100)
+h_x_fit <- seq(min(logit_res), max(logit_res), length = 40)
+h_y_fit <- dnorm(h_x_fit, mean=mean(logit_res), sd=sd(logit_res))
+h_y_fit <- h_y_fit * diff(h$mids[1:2] * length(logit_res))
+lines(h_x_fit, h_y_fit, col="blue", lwd=3)
+
+
 
 res <- factor(ifelse(logit_res > 0.5,
                      "Yes","No"), 
