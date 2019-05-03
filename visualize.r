@@ -1,9 +1,5 @@
 library(tidyverse)
-library(ggplot2)
-library(rpart)
-library(rpart.plot)
-library(caret)
-library(corrplot)
+library
 
 preData <- read.csv('csv/weatherAUS.csv')
 
@@ -14,7 +10,7 @@ preData <- read.csv('csv/weatherAUS.csv')
 #
 preData %>%
   # Cleaning
-  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -Location, -RISK_MM) %>% 
+  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
 # Prepocessing
@@ -23,13 +19,7 @@ preData %>%
   mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day)) %>%
   mutate(MonthName = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[Month]) -> preData
 
-preData$RainToday<-str_replace_all(preData$RainToday,"No","0")
-preData$RainToday<-str_replace_all(preData$RainToday,"Yes","1")
-preData$RainTomorrow<-str_replace_all(preData$RainTomorrow,"No","0")
-preData$RainTomorrow<-str_replace_all(preData$RainTomorrow,"Yes","1")
 preData$MinTemp <- as.numeric(preData$MinTemp)
-preData$RainToday<-as.numeric(preData$RainToday)
-preData$RainTomorrow<-as.numeric(preData$RainTomorrow)
 preData$MinTemp[which(is.na(preData$MinTemp))] <- mean(preData$MinTemp,na.rm = TRUE)
 preData$MaxTemp[which(is.na(preData$MaxTemp))] <- mean(preData$MaxTemp,na.rm = TRUE)
 preData$WindGustSpeed[which(is.na(preData$WindGustSpeed))] <- mean(preData$WindGustSpeed,na.rm = TRUE)
@@ -52,19 +42,64 @@ preData -> data
 # End Data Preparatiob
 #
 
-png('images/corrplot/corrplot.png', 800, 600)
-  data %>%
-    select(-MonthName) %>% 
-    cor() %>%
-    corrplot()
+# # Ratio No:Yes:NA in RainTomorrow
+# png('images/visualization/ratio_no-yes-na.png', 800, 600)
+# data %>% 
+#   ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
+# dev.off()
+
+# # Rain month
+# png('images/visualization/month_bar.png', 800, 600)
+#   data %>% 
+#     filter(RainToday == "Yes") %>% 
+#     ggplot(aes(x = reorder(MonthName, Month))) + 
+#     geom_bar() + 
+#     xlab("Month")
+# dev.off()
+
+# # Humidity3pm ~ RainTomorrow
+#   data %>% 
+#     #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
+#     #geom_violin()
+#     ggplot(aes(x = Humidity3pm)) +
+#     geom_bar()
+
+number_of_record_by_location <- data %>%
+  group_by(Location) %>%
+  summarise(
+    count = n()
+  )
+
+# rain today
+png('images/visualization/rain_today_by_month.png', 800, 600)
+data %>%
+  mutate(
+    RainToday = ifelse(RainToday == 'Yes', 1, 0)
+  ) %>%
+  group_by(Month) %>%
+  summarise(
+    mean = mean(RainToday)
+  ) %>%
+  ggplot() +
+    geom_bar(
+      aes(x = Month, y = mean),
+      stat = 'summary', fun.y = 'mean'
+    )
 dev.off()
 
-#for(location in unique(preData$Location)) {
-#  png(paste('images/corrplot/', location, '.png', sep = ''), 800, 600)
-#  preData %>%
-#    filter(Location == location) %>%
-#    select(-Location) %>%
-#    cor() %>%
-#    corrplot()
-#  dev.off()
-#}
+# rain today by location
+png('images/visualization/rain_by_location.png', 1920, 1080)
+data %>%
+  mutate(
+    RainToday = ifelse(RainToday == 'Yes', 1, 0)
+  ) %>%
+  group_by(Location, Month) %>%
+  summarise(
+    mean = mean(RainToday)
+  ) %>%
+  ggplot() +
+    geom_bar(
+      aes(x = Month, y = mean, fill = Location),
+      position = 'dodge', stat = 'summary', fun.y = 'mean'
+    )
+dev.off()
