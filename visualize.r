@@ -112,6 +112,7 @@ data %>%
   select(contains("Temp"), Rainfall, contains("Spedd"), 
          contains("Humidity"), contains("Pressure")) -> pairs_data
 pairs(pairs_data)
+dev.off()
 # # temp
 # data %>%
 #   group_by(Month, Day) %>%
