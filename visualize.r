@@ -10,7 +10,7 @@ rawData <- read.csv('csv/weatherAUS.csv')
 #
 # Cleaning
 rawData %>%
-  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -RISK_MM) %>% 
+  select(-WindDir3pm, -WindDir9am, -WindGustDir, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
 # Preprocessing
@@ -20,10 +20,6 @@ preData %>%
   mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day)) -> preData
 
 preData$MinTemp <- as.numeric(preData$MinTemp)
-
-# change yes/no to 1/0
-preData$RainToday <- ifelse(preData$RainToday == 'Yes', 1, 0)
-preData$RainTomorrow <- ifelse(preData$RainTomorrow == 'Yes', 1, 0)
 
 # replace na with mean
 for(col in c('MinTemp', 'MaxTemp', 'WindGustSpeed', 'Sunshine', 'Evaporation')) {
@@ -49,12 +45,19 @@ png('images/visualization/ratio_no-yes-na.png', 800, 600)
    ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
 dev.off()
 
-Humidity3pm ~ RainTomorrow
- data %>% 
-   #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
-   #geom_violin()
-   ggplot(aes(x = Humidity3pm)) +
-     geom_bar()
+# Humidity9am ~ RainTomorrow
+png('images/visualization/raintomorrow_humidity9am.png', 800, 600)
+  data %>% 
+   ggplot(aes(x=RainTomorrow, y=Humidity9am, colour = RainTomorrow, fill= RainTomorrow)) + 
+   geom_violin()
+dev.off()
+
+# Humidity3pm ~ RainTomorrow
+png('images/visualization/raintomorrow_humidity3pm.png', 800, 600)
+  data %>% 
+   ggplot(aes(x=RainTomorrow, y=Humidity3pm, colour = RainTomorrow, fill= RainTomorrow)) + 
+   geom_violin()
+dev.off()
 
 number_of_record_by_location <- data %>%
   group_by(Location) %>%
@@ -94,4 +97,16 @@ data %>%
       aes(x = Month, y = mean, fill = Location),
       position = 'dodge', stat = 'summary', fun.y = 'mean'
     )
+dev.off()
+
+# rain tomorrow by location scatter plot
+png('images/visualization/rain_by_location_scatter.png', 1920, 1080)
+data %>%
+  mutate(
+    RainTomorrow = ifelse(RainTomorrow == 'Yes', 1, 0)
+  ) %>%
+  ggplot() +
+  geom_point(
+    aes(x = Month, y = RainTomorrow, fill = Location)
+  )
 dev.off()
