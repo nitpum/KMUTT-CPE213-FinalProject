@@ -83,5 +83,9 @@ tomorrow %>% mutate(MeanTemp = (MaxTemp - MinTemp) / 2) -> tomorrow
 
 scatterplot3d(tomorrow$Month, tomorrow$Day, tomorrow$MeanTemp, pch=4)
 
+tomorrow %>% group_by(Month) %>% filter(RainToday == "Yes") %>% summarise(count = n())
+tomorrow %>% group_by(Month) %>% filter(RainToday == "No") %>% summarise(count = n())
 
+tomorrow %>% group_by(Month) %>% filter(RainTomorrow == "Yes") %>% summarise(count = n())
+tomorrow %>% group_by(Month) %>% filter(RainTomorrow == "No") %>% summarise(count = n())
 
