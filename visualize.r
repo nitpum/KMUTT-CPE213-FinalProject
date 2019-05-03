@@ -44,26 +44,17 @@ preData -> data
 #
 
 # # Ratio No:Yes:NA in RainTomorrow
-# png('images/visualization/ratio_no-yes-na.png', 800, 600)
-# data %>% 
-#   ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
-# dev.off()
+png('images/visualization/ratio_no-yes-na.png', 800, 600)
+ data %>% 
+   ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
+dev.off()
 
-# # Rain month
-# png('images/visualization/month_bar.png', 800, 600)
-#   data %>% 
-#     filter(RainToday == "Yes") %>% 
-#     ggplot(aes(x = reorder(MonthName, Month))) + 
-#     geom_bar() + 
-#     xlab("Month")
-# dev.off()
-
-# # Humidity3pm ~ RainTomorrow
-#   data %>% 
-#     #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
-#     #geom_violin()
-#     ggplot(aes(x = Humidity3pm)) +
-#     geom_bar()
+Humidity3pm ~ RainTomorrow
+ data %>% 
+   #ggplot(aes(x=RainTomorrow, y=Hum, colour = RainTomorrow, fill= RainTomorrow)) + 
+   #geom_violin()
+   ggplot(aes(x = Humidity3pm)) +
+     geom_bar()
 
 number_of_record_by_location <- data %>%
   group_by(Location) %>%
