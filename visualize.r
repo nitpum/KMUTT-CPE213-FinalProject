@@ -10,7 +10,7 @@ rawData <- read.csv('csv/weatherAUS.csv')
 #
 # Cleaning
 rawData %>%
-  select(-WindDir3pm, -WindDir9am, -WindGustDir, -Rainfall, -RISK_MM) %>% 
+  select(-WindDir3pm, -WindDir9am, -WindGustDir, -RISK_MM) %>% 
   filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
 
 # Preprocessing
@@ -97,4 +97,16 @@ data %>%
       aes(x = Month, y = mean, fill = Location),
       position = 'dodge', stat = 'summary', fun.y = 'mean'
     )
+dev.off()
+
+# rain tomorrow by location scatter plot
+png('images/visualization/rain_by_location_scatter.png', 1920, 1080)
+data %>%
+  mutate(
+    RainTomorrow = ifelse(RainTomorrow == 'Yes', 1, 0)
+  ) %>%
+  ggplot() +
+  geom_point(
+    aes(x = Month, y = RainTomorrow, fill = Location)
+  )
 dev.off()
