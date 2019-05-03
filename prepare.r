@@ -7,10 +7,16 @@ rawData <- read.csv('csv/weatherAUS.csv')
 # Data Preparation
 #
 #
+
 # Cleaning
 rawData %>%
-  select(-WindDir3pm, -WindDir9am, -WindGustDir, -RISK_MM) %>% 
-  filter(!is.na(RainTomorrow), !is.na(RainToday)) -> preData
+  select(-WindDir3pm, 
+          -WindDir9am, 
+          -WindGustDir, 
+          -RISK_MM) %>% 
+  filter(!is.na(RainTomorrow), 
+         !is.na(RainToday)) 
+          -> preData
 
 # Preprocessing
 preData %>%
