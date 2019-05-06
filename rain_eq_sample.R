@@ -50,11 +50,11 @@ euei <- tomorrow$RainTomorrow == "No"
 sum(euei, na.rm = TRUE)
 
 tomorrow %>% filter(RainTomorrow == "No") -> tomorrowNo
-tomorrowNo[1:30000, ] -> tomorrowNo
+#tomorrowNo[1:30000, ] -> tomorrowNo
 # tomorrowNo <- sample(nrow(tomorrowNo), .2*nrow(tomorrowNo))
 
 tomorrow %>% filter(RainTomorrow == "Yes") -> tomorrowYes
-tomorrowYes[1:30000, ] -> tomorrowYes
+#tomorrowYes[1:30000, ] -> tomorrowYes
 
 
 tomorrow <- rbind(tomorrowYes, tomorrowNo)
@@ -67,7 +67,9 @@ testing_data <- tomorrow[test_index, ]
 tree <- rpart(RainTomorrow ~ .,
               data = training_data)
 
+png('images/visualization/tree.png', 800, 600)
 rpart.plot(tree)
+dev.off()
 
 res_p <- predict(tree, training_data)
 res_class <- predict(tree,

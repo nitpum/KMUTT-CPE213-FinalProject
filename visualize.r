@@ -39,23 +39,27 @@ preData -> data
 #
 
 # # Ratio No:Yes:NA in RainTomorrow
-png('images/visualization/ratio_no-yes-na.png', 800, 600)
+png('images/visualization/ratio_no-yes-na.png', 1920, 1080)
  data %>% 
-   ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + geom_bar() 
+    ggplot(aes(x = RainTomorrow, fill = RainTomorrow)) + 
+    geom_bar() +
+    theme(text = element_text(size = 48))
 dev.off()
 
 # Humidity9am ~ RainTomorrow
-png('images/visualization/raintomorrow_humidity9am.png', 800, 600)
+png('images/visualization/raintomorrow_humidity9am.png', 1920, 1080)
   data %>% 
-   ggplot(aes(x=RainTomorrow, y=Humidity9am, colour = RainTomorrow, fill= RainTomorrow)) + 
-   geom_violin()
+    ggplot(aes(x=RainTomorrow, y=Humidity9am, colour = RainTomorrow, fill= RainTomorrow)) + 
+    geom_violin() +
+    theme(text = element_text(size = 48))
 dev.off()
 
 # Humidity3pm ~ RainTomorrow
-png('images/visualization/raintomorrow_humidity3pm.png', 800, 600)
+png('images/visualization/raintomorrow_humidity3pm.png', 1920, 1080)
   data %>% 
-   ggplot(aes(x=RainTomorrow, y=Humidity3pm, colour = RainTomorrow, fill= RainTomorrow)) + 
-   geom_violin()
+    ggplot(aes(x=RainTomorrow, y=Humidity3pm, colour = RainTomorrow, fill= RainTomorrow)) + 
+    geom_violin() +
+    theme(text = element_text(size = 48))
 dev.off()
 
 number_of_record_by_location <- data %>%
@@ -65,7 +69,7 @@ number_of_record_by_location <- data %>%
   )
 
 # rain today
-png('images/visualization/rain_today_by_month.png', 800, 600)
+png('images/visualization/rain_today_by_month.png', 1920, 1080)
 data %>%
   mutate(
     RainToday = ifelse(RainToday == 'Yes', 1, 0)
@@ -78,7 +82,8 @@ data %>%
     geom_bar(
       aes(x = Month, y = mean),
       stat = 'summary', fun.y = 'mean'
-    )
+    ) +
+    theme(text = element_text(size = 48))
 dev.off()
 
 # rain today by location
@@ -95,7 +100,8 @@ data %>%
     geom_bar(
       aes(x = Month, y = mean, fill = Location),
       position = 'dodge', stat = 'summary', fun.y = 'mean'
-    )
+    ) +
+    theme(text = element_text(size = 48))
 dev.off()
 
 # humidity3pm rainfall
@@ -103,7 +109,8 @@ png('images/visualization/humidity3pm_rainfall.png', 1920, 1080)
 data %>%
   filter(Rainfall < 200) %>% 
   ggplot(aes(x=Humidity3pm, y = Rainfall)) + 
-  geom_point(aes(colour = Rainfall)) + geom_smooth(method = "lm")
+  geom_point(aes(colour = Rainfall)) + geom_smooth(method = "lm") +
+  theme(text = element_text(size = 48))
 dev.off()
 
 # Pair
