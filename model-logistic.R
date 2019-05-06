@@ -3,6 +3,7 @@ library(rpart)
 library(rpart.plot)
 library(caret)
 library(glm2)
+library(popbio)
 
 preData <- read.csv('csv/weatherAUS.csv')
 
@@ -19,8 +20,8 @@ preData %>%
 # Prepocessing
 preData %>%
   separate(col = Date, into = c("Year", "Month", "Day"), sep = "-") %>%
-  mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day)) %>%
-  mutate(MonthName = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[Month]) -> preData
+  mutate(Year = as.numeric(Year), Month = as.numeric(Month), Day = as.numeric(Day)) -> preData
+  # mutate(MonthName = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")[Month]) -> preData
 
 preData$MinTemp <- as.numeric(preData$MinTemp)
 preData$MinTemp[which(is.na(preData$MinTemp))] <- mean(preData$MinTemp,na.rm = TRUE)
@@ -61,10 +62,12 @@ sum(euei, na.rm = TRUE)
 # tomorrow %>% filter(!is.na(RainTomorrow)) -> tomorrow
 
 tomorrow %>% filter(RainTomorrow == "No") -> tomorrowNo
-# tomorrowNo[1:30000, ] -> tomorrowNo
+tomorrowNo[1:1000, ] -> tomorrowNo
 
 tomorrow %>% filter(RainTomorrow == "Yes") -> tomorrowYes
-# tomorrowYes[1:30000, ] -> tomorrowYes
+tomorrowYes[1:1000, ] -> tomorrowYes
+
+tomorrow <- rbind(tomorrowYes, tomorrowNo)
 
 tomorrowYes_traning <- sample(nrow(tomorrowYes), .2*nrow(tomorrowYes))
 tomorrowNo_traning <- sample(nrow(tomorrowNo), .2*nrow(tomorrowNo))
@@ -88,3 +91,13 @@ confusionMatrix(res,
                 tomorrow$RainTomorrow, 
                 positive="No",
                 mode="prec_recall")
+
+# plot(RainTomorrow ~ ., data=tomorrow)
+# lines(RainTomorrow ~ ., logit_res, lwd=10)
+
+# plot(tomorrow, res)
+# backward <- step(model)
+
+plot(RainTomorrow ~ Month, data = tomorrow)
+li
+# lines(tomorrow$Month, logit_res)
